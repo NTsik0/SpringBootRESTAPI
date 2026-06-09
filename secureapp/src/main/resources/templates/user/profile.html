@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Profile — SecureApp</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<nav>
+    <span class="brand">SecureApp</span>
+    <div class="nav-links">
+        <a th:href="@{/dashboard}">Dashboard</a>
+        <a th:href="@{/logout}">Logout</a>
+    </div>
+</nav>
+
+<main class="container">
+    <h1>My Profile</h1>
+    <div class="card" th:if="${user}">
+        <p><strong>Display Name:</strong> <span th:text="${user.displayName}"></span></p>
+        <p><strong>Username:</strong>     <span th:text="${user.username}"></span></p>
+        <p><strong>Role:</strong>         <span th:text="${user.role}"></span></p>
+        <p><strong>Account Status:</strong>
+            <span th:text="${user.enabled} ? 'Active' : 'Disabled'"></span>
+        </p>
+    </div>
+</main>
+</body>
+</html>

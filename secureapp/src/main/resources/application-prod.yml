@@ -1,0 +1,54 @@
+# application-prod.yml production profile
+# Activated with: --spring.profiles.active=prod
+# this is for to connect to a real PostgreSQL database.
+# sensitive values the ones that need to be hidden like DB password and others should be injected via environment
+# variables are never hard-coded in this file.
+#
+# you gotta set these before running:
+#   export DB_HOST=your-db-host
+#   export DB_NAME=secureappdb
+#   export DB_USER=secureapp_user
+#   export DB_PASS=your-secure-password
+
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:5432/${DB_NAME:secureappdb}
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USER:secureapp_user}
+    password: ${DB_PASS:changeme}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 30000
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate       # never auto-modify the schema in prod; use Flyway/Liquibase
+    show-sql: false            # don't flood logs with SQL in production
+
+  h2:
+    console:
+      enabled: false           # H2 console must never be exposed in production
+
+# custom properties (prod overrides)
+app:
+  settings:
+    title: "SecureApp"
+    pagination-limit: 20
+    external-service-url: https://api.externalpartner.com/v1
+    contact-email: support@secureapp.com
+    debug-mode: false          # never expose debug info to end users
+
+#  Logging (prod): only warn and above to reduce noise & cost
+logging:
+  level:
+    root: WARN
+    com.nikoloz.secureapp: INFO   # still log our own info events (logins, registrations)
+  file:
+    name: logs/app.log
+  logback:
+    rollingpolicy:
+      max-file-size: 50MB
+      max-history: 30           # Keep 30 days of rotated logs
+      file-name-pattern: logs/app-%d{yyyy-MM-dd}.%i.log.gz

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Manage Users — SecureApp</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<nav>
+    <span class="brand">SecureApp · Admin</span>
+    <div class="nav-links">
+        <a th:href="@{/admin}">Admin Dashboard</a>
+        <a th:href="@{/dashboard}">My Dashboard</a>
+        <form th:action="@{/logout}" method="post" style="display:inline;">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <button type="submit" class="btn-link">Logout</button>
+        </form>    </div>
+</nav>
+
+<main class="container">
+    <h1>Manage Users</h1>
+
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}"   class="alert alert-error"   th:text="${errorMessage}"></div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Display Name</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="user : ${users}">
+                <td th:text="${user.id}"></td>
+                <td th:text="${user.username}"></td>
+                <td th:text="${user.displayName}"></td>
+                <td th:text="${user.role}"></td>
+                <td>
+                    <span th:text="${user.enabled} ? 'Active' : 'Disabled'"
+                          th:class="${user.enabled} ? 'badge badge-success' : 'badge badge-danger'">
+                    </span>
+                </td>
+                <td class="actions">
+                    <form th:if="${user.enabled}" method="post"
+                          th:action="@{/admin/users/{id}/disable(id=${user.id})}">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                        <button type="submit" class="btn btn-sm btn-warning">Disable</button>
+                    </form>
+                    <form th:unless="${user.enabled}" method="post"
+                          th:action="@{/admin/users/{id}/enable(id=${user.id})}">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                        <button type="submit" class="btn btn-sm btn-success">Enable</button>
+                    </form>
+                    <form method="post"
+                          th:action="@{/admin/users/{id}/delete(id=${user.id})}"
+                          onsubmit="return confirm('Delete this user?')">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</main>
+</body>
+</html>

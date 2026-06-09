@@ -1,0 +1,30 @@
+# application.yml   shared settings loaded for ALL profiles.
+# Profile-specific overrides live in application-dev.yml and application-prod.yml.
+# Activate a profile via:
+#   java -jar secureapp.jar --spring.profiles.active=dev
+#   java -jar secureapp.jar --spring.profiles.active=prod
+# Or in your IDE run configuration: VM arg  -Dspring.profiles.active=dev
+
+spring:
+  application:
+    name: secureapp
+
+  # we let Spring Boot find the profile-specific files automatically
+  profiles:
+    active: dev   # default override on the command line for prod
+
+  # Message source is configured as a bean in LocaleConfig,
+  # but we set the basename here too so Boot's auto-configured validator so it picks it up for constraint message interpolation.
+  messages:
+    basename: messages
+    encoding: UTF-8
+
+#    Custom application properties                                           
+# Overridden per-profile in application-dev.yml / application-prod.yml
+app:
+  settings:
+    title: SecureApp
+    pagination-limit: 20
+    external-service-url: https://example.com/api
+    contact-email: support@secureapp.com
+    debug-mode: false

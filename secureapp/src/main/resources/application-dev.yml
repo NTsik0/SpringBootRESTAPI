@@ -1,0 +1,50 @@
+# application-dev.yml Development profile
+# Activated with: --spring.profiles.active=dev
+#
+# Uses H2 in-memory database so no external DB is needed locally.
+# The H2 console is available at http://localhost:8080/h2-console
+# JDBC URL: jdbc:h2:mem:secureappdb
+
+spring:
+  datasource:
+    url: jdbc:h2:mem:secureappdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop   # Schema is recreated fresh on every start
+    show-sql: true            # Prints every SQL statement  helpful for debugging
+    properties:
+      hibernate:
+        format_sql: true
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+#    custom properties (dev overrides)
+app:
+  settings:
+    title: "SecureApp [DEV]"
+    pagination-limit: 50        # larger pages make manual testing easier
+    external-service-url: http://localhost:9090/mock-api
+    contact-email: dev@secureapp.local
+    debug-mode: true            # Enables verbose debug info in API responses
+
+#    logging (dev): DEBUG for our code, INFO for everything else
+logging:
+  level:
+    root: INFO
+    com.nikoloz.secureapp: DEBUG
+    org.springframework.security: DEBUG
+  file:
+    name: logs/app.log
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
+      max-history: 7
+      file-name-pattern: logs/app-%d{yyyy-MM-dd}.%i.log.gz

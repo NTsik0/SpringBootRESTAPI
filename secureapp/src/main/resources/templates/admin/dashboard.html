@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Admin Dashboard — SecureApp</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<nav>
+    <span class="brand">SecureApp · Admin</span>
+    <div class="nav-links">
+        <a th:href="@{/dashboard}">My Dashboard</a>
+        <a th:href="@{/admin/users}">Users</a>
+        <form th:action="@{/logout}" method="post" style="display:inline;">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+            <button type="submit" class="btn-link">Logout</button>
+        </form>    </div>
+</nav>
+
+<main class="container">
+    <h1>Admin Dashboard</h1>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-value" th:text="${totalUsers}">0</div>
+            <div class="stat-label">Total Users</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" th:text="${adminCount}">0</div>
+            <div class="stat-label">Administrators</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" th:text="${userCount}">0</div>
+            <div class="stat-label">Regular Users</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" th:text="${disabledCount}">0</div>
+            <div class="stat-label">Disabled Accounts</div>
+        </div>
+    </div>
+
+    <a class="btn" th:href="@{/admin/users}">Manage Users</a>
+</main>
+</body>
+</html>
