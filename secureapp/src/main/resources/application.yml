@@ -19,7 +19,38 @@ spring:
     basename: messages
     encoding: UTF-8
 
-#    Custom application properties                                           
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when-authorized
+    info:
+      enabled: true
+  info:
+    env:
+      enabled: true
+
+# Info endpoint content
+info:
+  app:
+    name: SecureApp
+    description: Spring Boot REST API — user management and task tracking
+    version: 1.0.0
+    author: Nikoloz Tsikaridze
+
+# Swagger / SpringDoc
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+  api-docs:
+    path: /v3/api-docs
+
+#    Custom application properties
 # Overridden per-profile in application-dev.yml / application-prod.yml
 app:
   settings:

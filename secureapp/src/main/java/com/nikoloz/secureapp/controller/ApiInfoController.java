@@ -15,7 +15,7 @@ import java.util.Map;
 
 /**
  * public REST endpoint that exposes application metadata.
- * this here demonstrates two Assignment-2 requirements together:
+ * this  demonstrates two together:
  *   1. Injecting AppSettingsProperties to drive dynamic, profile-aware responses.
  *   2. Returning a localised welcome message based on the Accept-Language header.
  * for test localisation we gotta use next:

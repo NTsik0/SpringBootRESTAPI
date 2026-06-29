@@ -1,6 +1,7 @@
 package com.nikoloz.secureapp.controller;
 
 import com.nikoloz.secureapp.model.AppUser;
+import com.nikoloz.secureapp.model.UserRole;
 import com.nikoloz.secureapp.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,8 +31,8 @@ public class AdminController {
 
         List<AppUser> allUsers = userService.getAllUsers();
 
-        long adminCount   = allUsers.stream().filter(u -> "ROLE_ADMIN".equals(u.getRole())).count();
-        long userCount    = allUsers.stream().filter(u -> "ROLE_USER".equals(u.getRole())).count();
+        long adminCount   = allUsers.stream().filter(u -> u.getRole() == UserRole.ROLE_ADMIN).count();
+        long userCount    = allUsers.stream().filter(u -> u.getRole() == UserRole.ROLE_USER).count();
         long disabledCount = allUsers.stream().filter(u -> !u.isEnabled()).count();
 
         log.debug("Dashboard stats — total: {}, admins: {}, users: {}, disabled: {}",

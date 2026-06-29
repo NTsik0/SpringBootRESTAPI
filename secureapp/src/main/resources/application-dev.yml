@@ -35,16 +35,6 @@ app:
     contact-email: dev@secureapp.local
     debug-mode: true            # Enables verbose debug info in API responses
 
-#    logging (dev): DEBUG for our code, INFO for everything else
-logging:
-  level:
-    root: INFO
-    com.nikoloz.secureapp: DEBUG
-    org.springframework.security: DEBUG
-  file:
-    name: logs/app.log
-  logback:
-    rollingpolicy:
-      max-file-size: 10MB
-      max-history: 7
-      file-name-pattern: logs/app-%d{yyyy-MM-dd}.%i.log.gz
+# Logging levels are configured in logback-spring.xml using <springProfile name="dev">.
+# The log file path and rolling policy are also defined there.
+# These prev same for app..-prod.yml

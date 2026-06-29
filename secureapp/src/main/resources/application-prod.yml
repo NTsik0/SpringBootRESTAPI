@@ -40,15 +40,5 @@ app:
     contact-email: support@secureapp.com
     debug-mode: false          # never expose debug info to end users
 
-#  Logging (prod): only warn and above to reduce noise & cost
-logging:
-  level:
-    root: WARN
-    com.nikoloz.secureapp: INFO   # still log our own info events (logins, registrations)
-  file:
-    name: logs/app.log
-  logback:
-    rollingpolicy:
-      max-file-size: 50MB
-      max-history: 30           # Keep 30 days of rotated logs
-      file-name-pattern: logs/app-%d{yyyy-MM-dd}.%i.log.gz
+# Logging levels are configured in logback-spring.xml using <springProfile name="prod">.
+# The log file path and rolling policy are also defined there.

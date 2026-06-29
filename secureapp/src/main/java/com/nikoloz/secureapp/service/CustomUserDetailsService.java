@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
+ * Gotta provide little bit explanation of what each part of these implement and connect:
  * Bridge between our AppUser entity and Spring Security's authentication pipeline.
  * Spring calls loadUserByUsername() on every login attempt.
  * Logging at INFO on success, WARN on failure gives a clear audit trail
@@ -47,7 +48,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 appUser.getPassword(),
                 appUser.isEnabled(),
                 true, true, true,
-                List.of(new SimpleGrantedAuthority(appUser.getRole()))
+                List.of(new SimpleGrantedAuthority(appUser.getRole().name()))
         );
     }
 }

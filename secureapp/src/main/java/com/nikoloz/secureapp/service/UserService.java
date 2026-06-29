@@ -1,6 +1,8 @@
 package com.nikoloz.secureapp.service;
 
+import com.nikoloz.secureapp.exception.ResourceNotFoundException;
 import com.nikoloz.secureapp.model.AppUser;
+import com.nikoloz.secureapp.model.UserRole;
 import com.nikoloz.secureapp.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Here is provided a business logic for user management
+ * Here is provided a business logic for user management about what does the login use and also what conventions do the log levels follow
  * All logging uses SLF4J parameterised calls no string concatenation,
  * no System.out.println(). Log levels follow the convention:
  *   DEBUG is for internal state useful during local development
@@ -40,7 +42,7 @@ public class UserService {
         }
 
         String hashedPassword = passwordEncoder.encode(plainPassword);
-        AppUser newUser = new AppUser(username, hashedPassword, "ROLE_USER", displayName);
+        AppUser newUser = new AppUser(username, hashedPassword, UserRole.ROLE_USER, displayName);
         AppUser saved = userRepository.save(newUser);
 
         log.info("New user registered successfully — username: '{}', displayName: '{}'",
@@ -60,7 +62,7 @@ public class UserService {
         AppUser user = userRepository.findById(userId)
                 .orElseThrow(() -> {
                     log.warn("disableUser failed — no user found with id {}", userId);
-                    return new IllegalArgumentException("User not found with id: " + userId);
+                    return new ResourceNotFoundException("User not found with id: " + userId);
                 });
         user.setEnabled(false);
         userRepository.save(user);
@@ -72,7 +74,7 @@ public class UserService {
         AppUser user = userRepository.findById(userId)
                 .orElseThrow(() -> {
                     log.warn("enableUser failed — no user found with id {}", userId);
-                    return new IllegalArgumentException("User not found with id: " + userId);
+                    return new ResourceNotFoundException("User not found with id: " + userId);
                 });
         user.setEnabled(true);
         userRepository.save(user);
@@ -82,8 +84,13 @@ public class UserService {
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteUser(Long userId) {
         log.debug("Admin requesting deletion of user id {}", userId);
-        userRepository.deleteById(userId);
-        log.info("User deleted — id: {}", userId);
+        AppUser user = userRepository.findById(userId)
+                .orElseThrow(() -> {
+                    log.warn("deleteUser failed — no user found with id {}", userId);
+                    return new ResourceNotFoundException("User not found with id: " + userId);
+                });
+        userRepository.delete(user);
+        log.info("User deleted — id: {}, username: '{}'", userId, user.getUsername());
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -92,7 +99,13 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
-    public List<AppUser> getUsersByRole(String role) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public Optional<AppUser> findById(Long id) {
+        log.debug("Looking up user by id {}", id);
+        return userRepository.findById(id);
+    }
+
+    public List<AppUser> getUsersByRole(UserRole role) {
         log.debug("Fetching users by role '{}'", role);
         return userRepository.findByRole(role);
     }

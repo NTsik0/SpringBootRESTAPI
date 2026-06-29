@@ -5,6 +5,7 @@ import com.nikoloz.secureapp.service.UserService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,7 +48,7 @@ public class AuthApiController {
 
         log.info("API user registered successfully with username '{}'", request.username());
 
-        return ResponseEntity.ok(Map.of(
+        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
                 "message", message,
                 "username", request.username()
         ));

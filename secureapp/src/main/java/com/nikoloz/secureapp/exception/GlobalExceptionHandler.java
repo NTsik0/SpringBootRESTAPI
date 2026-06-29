@@ -54,6 +54,24 @@ public class GlobalExceptionHandler {
         ));
     }
 
+    // ── Resource not found (404) ──────────────────────────────────────────
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleNotFound(
+            ResourceNotFoundException ex, Locale locale) {
+
+        log.warn("Resource not found: {}", ex.getMessage());
+
+        String message = messageSource.getMessage(
+                "error.not.found", new Object[]{ex.getMessage()}, locale);
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
+                "timestamp", LocalDateTime.now().toString(),
+                "status", HttpStatus.NOT_FOUND.value(),
+                "error", message
+        ));
+    }
+
     // ── Domain rule violations (e.g. "username already taken") ───────────
 
     @ExceptionHandler(IllegalArgumentException.class)
